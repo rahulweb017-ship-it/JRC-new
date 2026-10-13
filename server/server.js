@@ -1,4 +1,6 @@
 import 'dotenv/config';
+import path from 'node:path';
+import { fileURLToPath } from 'node:url';
 import express from 'express';
 import cors from 'cors';
 import helmet from 'helmet';
@@ -10,13 +12,18 @@ import { errorHandler } from './middleware/errorHandler.js';
 
 const app = express();
 const PORT = process.env.PORT || 5000;
+const isProduction = process.env.NODE_ENV === 'production';
+const clientDist = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../client/dist');
+
+// Behind Apache/Passenger in production — trust the first proxy for client IPs
+app.set('trust proxy', 1);
 
 // ---------------------
 // Middleware
 // ---------------------
 
-// Security headers
-app.use(helmet());
+// Security headers (CSP disabled: the site loads external fonts, maps and embeds)
+app.use(helmet({ contentSecurityPolicy: false }));
 
 // CORS — allow frontend origin
 app.use(
@@ -61,6 +68,14 @@ app.use('/api/estimate', formLimiter, quoteRoutes);
 app.get('/api/health', (_req, res) => {
   res.json({ status: 'ok', timestamp: new Date().toISOString() });
 });
+
+// Serve the built React client and fall back to index.html for client-side routes
+if (isProduction) {
+  app.use(express.static(clientDist));
+  app.get(/^(?!\/api(\/|$)).*/, (_req, res) => {
+    res.sendFile(path.join(clientDist, 'index.html'));
+  });
+}
 
 // ---------------------
 // Error handling
