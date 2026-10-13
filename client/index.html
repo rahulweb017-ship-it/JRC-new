@@ -5,11 +5,31 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="description" content="Denver home remodelers. Get a free estimate!" />
     <title>JRC Home Remodeling</title>
-    <link rel="dns-prefetch" href="https://fonts.googleapis.com" />
-    <link rel="dns-prefetch" href="https://fonts.gstatic.com" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&family=Poppins:wght@300;400;500;600;700;800&family=Roboto:wght@300;400;500;700&family=Work+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
+    <!-- Fonts load without blocking first paint; text shows in the fallback font until they arrive -->
+    <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&family=Poppins:wght@300;400;500;600;700;800&family=Roboto:wght@300;400;500;700&family=Work+Sans:wght@400;500;600;700&display=swap" onload="this.onload=null;this.rel='stylesheet'" />
+    <noscript>
+      <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&family=Poppins:wght@300;400;500;600;700;800&family=Roboto:wght@300;400;500;700&family=Work+Sans:wght@400;500;600;700&display=swap" />
+    </noscript>
+    <script>
+      // The home hero images are only referenced from JS/CSS, so the browser
+      // would discover them late. Start fetching them with the HTML instead.
+      if (location.pathname === '/') {
+        [
+          '/assets/images/hero-cream-pattern.jpg',
+          '/assets/images/hero-bathroom-after.webp',
+          '/assets/images/hero-bathroom-before.webp'
+        ].forEach(function (href) {
+          var link = document.createElement('link');
+          link.rel = 'preload';
+          link.as = 'image';
+          link.href = href;
+          link.fetchPriority = 'high';
+          document.head.appendChild(link);
+        });
+      }
+    </script>
   </head>
   <body>
     <div id="root"></div>

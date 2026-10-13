@@ -1,0 +1,14 @@
+# JRC Home Remodeling
+
+> Denver, Colorado home remodeling contractor offering kitchen, bathroom, basement and full-home renovations. Call 303-418-2167 for a free estimate.
+
+## Main pages
+
+- [Home](https://jrchomeremodeling.com/): Overview of JRC Home Remodeling services
+- [Services](https://jrchomeremodeling.com/services): All remodeling services
+- [Kitchen Remodeling](https://jrchomeremodeling.com/kitchen-remodeling): Custom kitchen renovations
+- [Bathroom Remodeling](https://jrchomeremodeling.com/bathroom-remodeling): Bathroom renovations and upgrades
+- [Basement Remodeling](https://jrchomeremodeling.com/basement-remodeling): Basement finishing and remodels
+- [Home Remodeling](https://jrchomeremodeling.com/home-remodeling): Full-home renovations
+- [About Us](https://jrchomeremodeling.com/about-us): Company background
+- [Contact Us](https://jrchomeremodeling.com/contact-us): Request a free estimate

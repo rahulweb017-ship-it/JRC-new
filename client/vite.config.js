@@ -30,23 +30,15 @@ export default defineConfig({
     chunkSizeWarningLimit: 600,
     rollupOptions: {
       output: {
+        // Only the core React runtime is grouped by hand. Everything else
+        // (framer-motion, swiper, lenis, axios...) is left to the bundler so it
+        // lands in the lazy page chunks that actually use it instead of being
+        // preloaded on every page.
         manualChunks(id) {
-          if (id.includes('node_modules')) {
-            if (id.includes('framer-motion')) {
-              return 'vendor-motion';
-            }
-            if (id.includes('swiper')) {
-              return 'vendor-swiper';
-            }
-            if (
-              id.includes('react') ||
-              id.includes('react-dom') ||
-              id.includes('react-router-dom') ||
-              id.includes('react-helmet-async')
-            ) {
-              return 'vendor-react';
-            }
-            return 'vendor-others';
+          if (
+            /[\\/]node_modules[\\/](react|react-dom|scheduler|react-router|react-router-dom|react-helmet-async)[\\/]/.test(id)
+          ) {
+            return 'vendor-react';
           }
         },
       },

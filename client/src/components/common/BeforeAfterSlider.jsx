@@ -1,4 +1,4 @@
-﻿import React, { useState, useRef, useEffect, useCallback } from 'react';
+﻿import React, { useRef, useEffect, useCallback } from 'react';
 
 export default function BeforeAfterSlider({
   beforeImage,
@@ -12,73 +12,84 @@ export default function BeforeAfterSlider({
   initialPosition = 50,
   autoAnimate = false,
   animationDuration = 6, // duration in seconds for full loop
+  priority = false,
   className = '',
   style = {},
 }) {
-  const [position, setPosition] = useState(initialPosition);
-  const [containerWidth, setContainerWidth] = useState(0);
   const containerRef = useRef(null);
+  const beforeLayerRef = useRef(null);
+  const dividerTrackRef = useRef(null);
+  const positionRef = useRef(initialPosition);
   const isDragging = useRef(false);
   const isHovered = useRef(false);
-  const animFrameRef = useRef(null);
-  const startTimeRef = useRef(null);
 
-  // Measure container width for exact alignment of before/after images
-  useEffect(() => {
-    const updateWidth = () => {
-      if (containerRef.current) {
-        setContainerWidth(containerRef.current.clientWidth);
-      }
-    };
-    updateWidth();
-    window.addEventListener('resize', updateWidth);
-    return () => window.removeEventListener('resize', updateWidth);
+  // The position is written straight to the DOM (clip-path + transform) so the
+  // animation never re-renders React and never triggers layout.
+  const applyPosition = useCallback((pct) => {
+    positionRef.current = pct;
+    if (beforeLayerRef.current) {
+      beforeLayerRef.current.style.clipPath = `inset(0 ${100 - pct}% 0 0)`;
+    }
+    if (dividerTrackRef.current) {
+      dividerTrackRef.current.style.transform = `translate3d(${pct}%, 0, 0)`;
+    }
   }, []);
 
-  // Handle user interaction position calculation
+  useEffect(() => {
+    applyPosition(positionRef.current);
+  }, [applyPosition]);
+
   const updatePosition = useCallback((clientX) => {
     if (!containerRef.current) return;
     const rect = containerRef.current.getBoundingClientRect();
     const x = clientX - rect.left;
-    const pct = Math.max(0, Math.min(100, (x / rect.width) * 100));
-    setPosition(pct);
-  }, []);
+    applyPosition(Math.max(0, Math.min(100, (x / rect.width) * 100)));
+  }, [applyPosition]);
 
-  // Smooth automatic oscillation loop (0% -> 100% -> 0%)
+  // Smooth automatic oscillation loop, paused while off screen.
   useEffect(() => {
-    if (!autoAnimate) return;
+    if (!autoAnimate) return undefined;
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return undefined;
+    const container = containerRef.current;
+    if (!container) return undefined;
 
-    let running = true;
+    let frame = null;
+    let startTime = null;
+    let visible = false;
 
-    const animate = (timestamp) => {
-      if (!running) return;
+    const tick = (timestamp) => {
+      frame = null;
+      if (!visible) return;
 
       if (!isDragging.current && !isHovered.current) {
-        if (!startTimeRef.current) {
-          // Adjust initial time offset based on current position so position doesn't jump
-          const currentAngle = Math.asin(Math.max(-1, Math.min(1, (position - 50) / 45)));
-          startTimeRef.current = timestamp - (currentAngle * animationDuration * 1000) / (2 * Math.PI);
+        if (startTime === null) {
+          // Resume from the current position instead of jumping.
+          const angle = Math.asin(Math.max(-1, Math.min(1, (positionRef.current - 50) / 45)));
+          startTime = timestamp - (angle * animationDuration * 1000) / (2 * Math.PI);
         }
-        const elapsed = (timestamp - startTimeRef.current) / 1000;
-        const angle = (2 * Math.PI * elapsed) / animationDuration;
-        const newPos = 50 + 45 * Math.sin(angle);
-        setPosition(newPos);
+        const elapsed = (timestamp - startTime) / 1000;
+        applyPosition(50 + 45 * Math.sin((2 * Math.PI * elapsed) / animationDuration));
       } else {
-        startTimeRef.current = null;
+        startTime = null;
       }
 
-      animFrameRef.current = requestAnimationFrame(animate);
+      frame = requestAnimationFrame(tick);
     };
 
-    animFrameRef.current = requestAnimationFrame(animate);
+    const observer = new IntersectionObserver(([entry]) => {
+      visible = entry.isIntersecting;
+      if (visible && frame === null) {
+        startTime = null;
+        frame = requestAnimationFrame(tick);
+      }
+    });
+    observer.observe(container);
 
     return () => {
-      running = false;
-      if (animFrameRef.current) {
-        cancelAnimationFrame(animFrameRef.current);
-      }
+      observer.disconnect();
+      if (frame !== null) cancelAnimationFrame(frame);
     };
-  }, [autoAnimate, animationDuration, position]);
+  }, [autoAnimate, animationDuration, applyPosition]);
 
   const handleMouseDown = (e) => {
     isDragging.current = true;
@@ -117,6 +128,10 @@ export default function BeforeAfterSlider({
     isDragging.current = false;
   };
 
+  const imageLoadingProps = priority
+    ? { fetchPriority: 'high', loading: 'eager' }
+    : { loading: 'lazy' };
+
   return (
     <div
       ref={containerRef}
@@ -144,6 +159,8 @@ export default function BeforeAfterSlider({
       <img
         src={afterImage}
         alt={afterAlt}
+        decoding="async"
+        {...imageLoadingProps}
         style={{
           position: 'absolute',
           top: 0,
@@ -160,7 +177,6 @@ export default function BeforeAfterSlider({
           top: '20px',
           right: '20px',
           backgroundColor: 'rgba(0, 0, 0, 0.75)',
-          backdropFilter: 'blur(4px)',
           color: '#FFFFFF',
           padding: '6px 16px',
           borderRadius: '20px',
@@ -176,24 +192,26 @@ export default function BeforeAfterSlider({
 
       {/* Before Image (Clipped Overlay) */}
       <div
+        ref={beforeLayerRef}
         style={{
           position: 'absolute',
-          top: 0,
-          left: 0,
-          width: `${position}%`,
-          height: '100%',
+          inset: 0,
           overflow: 'hidden',
           zIndex: 3,
+          clipPath: `inset(0 ${100 - initialPosition}% 0 0)`,
+          willChange: autoAnimate ? 'clip-path' : undefined,
         }}
       >
         <img
           src={beforeImage}
           alt={beforeAlt}
+          decoding="async"
+          {...imageLoadingProps}
           style={{
             position: 'absolute',
             top: 0,
             left: 0,
-            width: containerWidth ? `${containerWidth}px` : '100%',
+            width: '100%',
             maxWidth: 'none',
             height: '100%',
             objectFit: 'cover',
@@ -205,7 +223,7 @@ export default function BeforeAfterSlider({
             position: 'absolute',
             top: '20px',
             left: '20px',
-            backgroundColor: '#FF4500',
+            backgroundColor: '#C93800',
             color: '#FFFFFF',
             padding: '6px 16px',
             borderRadius: '20px',
@@ -220,45 +238,58 @@ export default function BeforeAfterSlider({
         </span>
       </div>
 
-      {/* Divider Bar & Handle */}
+      {/* Full-width track whose translateX(%) equals the slider position */}
       <div
-        onMouseDown={handleMouseDown}
-        onTouchStart={handleTouchStart}
+        ref={dividerTrackRef}
         style={{
           position: 'absolute',
-          top: 0,
-          left: `${position}%`,
-          width: '4px',
-          height: '100%',
-          backgroundColor: '#FFFFFF',
-          boxShadow: '0 0 10px rgba(0,0,0,0.5)',
+          inset: 0,
           zIndex: 5,
-          transform: 'translateX(-50%)',
-          cursor: 'ew-resize',
+          pointerEvents: 'none',
+          transform: `translate3d(${initialPosition}%, 0, 0)`,
+          willChange: autoAnimate ? 'transform' : undefined,
         }}
       >
+        {/* Divider Bar & Handle */}
         <div
+          onMouseDown={handleMouseDown}
+          onTouchStart={handleTouchStart}
           style={{
             position: 'absolute',
-            top: '50%',
-            left: '50%',
-            transform: 'translate(-50%, -50%)',
-            width: '44px',
-            height: '44px',
-            borderRadius: '50%',
+            top: 0,
+            left: 0,
+            width: '4px',
+            height: '100%',
             backgroundColor: '#FFFFFF',
-            boxShadow: '0 4px 16px rgba(0,0,0,0.3)',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
+            boxShadow: '0 0 10px rgba(0,0,0,0.5)',
+            transform: 'translateX(-50%)',
             cursor: 'ew-resize',
-            border: '2px solid #FF4500',
+            pointerEvents: 'auto',
           }}
         >
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#160A05" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-            <path d="M18 8L22 12L18 16" />
-            <path d="M6 8L2 12L6 16" />
-          </svg>
+          <div
+            style={{
+              position: 'absolute',
+              top: '50%',
+              left: '50%',
+              transform: 'translate(-50%, -50%)',
+              width: '44px',
+              height: '44px',
+              borderRadius: '50%',
+              backgroundColor: '#FFFFFF',
+              boxShadow: '0 4px 16px rgba(0,0,0,0.3)',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              cursor: 'ew-resize',
+              border: '2px solid #FF4500',
+            }}
+          >
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#160A05" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M18 8L22 12L18 16" />
+              <path d="M6 8L2 12L6 16" />
+            </svg>
+          </div>
         </div>
       </div>
     </div>

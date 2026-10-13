@@ -208,6 +208,7 @@ export default function JrcPainting() {
         beforeAlt="Before Painting"
         afterAlt="After Painting"
         height="640px"
+        priority
       />
     </div>
   </div>

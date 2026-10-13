@@ -36,8 +36,14 @@ export default function useParallaxImages(rootRef, options = {}) {
       frame = null;
       const viewportH = window.innerHeight;
 
+      // Measure everything before writing any transform; interleaving reads and
+      // writes forces a synchronous layout for every element.
+      const measured = [];
       onScreen.forEach((el) => {
-        const rect = el.getBoundingClientRect();
+        measured.push([el, el.getBoundingClientRect()]);
+      });
+
+      measured.forEach(([el, rect]) => {
         if (rect.height === 0) return;
 
         // -1 when the element sits at the top of the viewport, +1 at the bottom.
@@ -78,7 +84,6 @@ export default function useParallaxImages(rootRef, options = {}) {
 
     window.addEventListener('scroll', schedule, { passive: true });
     window.addEventListener('resize', schedule, { passive: true });
-    paint();
 
     return () => {
       observer.disconnect();

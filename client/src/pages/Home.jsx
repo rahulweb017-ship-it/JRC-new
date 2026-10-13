@@ -1,4 +1,4 @@
-﻿import React, { useState, useRef } from 'react';
+import React, { useState, useRef } from 'react';
 import { Helmet } from 'react-helmet-async';
 import { Link } from 'react-router-dom';
 import { Swiper, SwiperSlide } from 'swiper/react';
@@ -9,6 +9,7 @@ import 'swiper/css/pagination';
 
 import C3DRectangularCubeSlider from '../components/about/C3DRectangularCubeSlider';
 import BeforeAfterSlider from '../components/common/BeforeAfterSlider';
+import YouTubeLite from '../components/common/YouTubeLite';
 import useParallaxImages from '../hooks/useParallaxImages';
 import '../styles/home.css';
 
@@ -33,17 +34,17 @@ const sec6WhyFeatures = [
   {
     title: 'Residential Renovation',
     desc: 'Residential renovation is transformative process that breathes new life into home enhancing both its functionality and aesthetic appeal single room',
-    icon: '/assets/images/sec6-icon-residential-renovation.png'
+    icon: '/assets/images/sec6-icon-residential-renovation.webp'
   },
   {
     title: 'Design & Planning',
     desc: 'Design & Planning is the foundation of any successful renovation or construction project It involves turning ideas into practical well structured solutions',
-    icon: '/assets/images/sec6-icon-design-planning.png'
+    icon: '/assets/images/sec6-icon-design-planning.webp'
   },
   {
     title: 'Turnkey Renovation',
     desc: 'Turnkey renovation offers a complete hassle free solution for transforming space from start to finish from initial design and planning to final execution',
-    icon: '/assets/images/sec6-icon-turnkey-renovation.png'
+    icon: '/assets/images/sec6-icon-turnkey-renovation.webp'
   }
 ];
 
@@ -65,12 +66,22 @@ const sec3AccordionItems = [
   }
 ];
 
+const homeYouTubeShorts = [
+  { id: 'qYmNisQRqJY', title: 'kitchen Remodeling | JRC Colorado | Testimonial' },
+  { id: 'N2gZoxeZ-Do', title: 'Bathroom Remodeling Services | Colorado' },
+  { id: 'QaoNyK-t6jE', title: 'BATH REMODLING' },
+  { id: 'AzZqkkGm_OU', title: 'Transform Your Bathroom Starting at ' },
+  { id: 'G425lEXqgPs', title: 'Bathroom Remodeling Starting at ' },
+  { id: 'VtiwBycFHIo', title: 'Jrc hook' }
+];
+
 const homeShowcaseVideos = [
   {
     id: 'walkthrough',
     title: 'Project Walkthrough',
     caption: 'A completed JRC remodel, start to finish.',
     src: '/assets/videos/jrc-project-walkthrough.mp4',
+    poster: '/assets/videos/posters/jrc-project-walkthrough.webp',
     length: '0:40'
   },
   {
@@ -78,6 +89,7 @@ const homeShowcaseVideos = [
     title: 'Project Highlights',
     caption: 'A closer look at the detail and craftsmanship.',
     src: '/assets/videos/jrc-project-highlights.mp4',
+    poster: '/assets/videos/posters/jrc-project-highlights.webp',
     length: '0:25'
   }
 ];
@@ -87,7 +99,7 @@ const featureTabServices = [
     id: "kitchen-remodel",
     title: "Kitchen Remodeling",
     desc: "At JRC Home Remodeling, we specialize in high-quality kitchen remodeling that enhances both style and functionality. Whether you're looking for custom cabinetry, luxury countertops, modern backsplashes, or a full kitchen makeover, our team delivers expert craftsmanship tailored to your vision.",
-    image: "/assets/images/kitchen-sage-luxury.jpg",
+    image: "/assets/images/kitchen-sage-luxury.webp",
     path: "/kitchen-remodeling",
     highlights: [
       "Manufacturer Quality Equipment",
@@ -99,7 +111,7 @@ const featureTabServices = [
     id: "bathroom-remodel",
     title: "Bathroom Remodeling",
     desc: "Do you want to make the most out of your basement? We are precisely who you are looking for when it comes to a full-service remodeling company. We've been remodeling, replacing, fixing, and repairing basements and other stuff for eight years now, and our Foreman has been in the business for 45 years. There is no need to keep searching the web for 'Basement Contractors near me' because you have found one of the best.",
-    image: "/assets/images/project-bathroom.jpg",
+    image: "/assets/images/project-bathroom.webp",
     path: "/bathroom-remodeling",
     highlights: [
       "Manufacturer Quality Equipment",
@@ -111,7 +123,7 @@ const featureTabServices = [
     id: "basement-remodel",
     title: "Basement Remodeling",
     desc: "Looking to add more living space, increase your home's value, or create the ultimate entertainment area? At JRC Home Remodeling, we specialize in high-quality basement remodels that turn underutilized spaces into beautiful, functional living areas.",
-    image: "/assets/images/basement-renovation-scaffolding.jpg",
+    image: "/assets/images/basement-renovation-scaffolding.webp",
     path: "/basement-remodeling",
     highlights: [
       "Manufacturer Quality Equipment",
@@ -123,7 +135,7 @@ const featureTabServices = [
     id: "deck-installation",
     title: "Deck Installation",
     desc: "Affordable Deck Installers Near You: Enhance Your Outdoor Space in Just 2 Days! JRC Deck Builders is your premier destination for high-quality, affordable deck installations right in your neighborhood. Are you dreaming of transforming your outdoor space into a beautiful haven for relaxation and entertainment? Look no further! Our team of experienced professionals is here to turn your vision into reality, all within a timeframe that fits your schedule and budget.",
-    image: "/assets/images/deck-installation-luxury.jpg",
+    image: "/assets/images/deck-installation-luxury.webp",
     path: "/jrc-decks",
     highlights: [
       "Manufacturer Quality Equipment",
@@ -135,7 +147,7 @@ const featureTabServices = [
     id: "floor-installation",
     title: "Floor Installation",
     desc: "Looking for reliable floor installation near me? JRC Floor Installers is your go-to team for expert craftsmanship and high-quality flooring solutions. We specialize in installing laminate floors, luxury vinyl plank (LVP), ceramic flooring, and more?all with attention to detail and service you can count on.",
-    image: "/assets/images/floor-installation-worker.jpg",
+    image: "/assets/images/floor-installation-worker.webp",
     path: "/floor-installers",
     highlights: [
       "Manufacturer Quality Equipment",
@@ -147,7 +159,7 @@ const featureTabServices = [
     id: "painting-service",
     title: "Painting Service",
     desc: "Looking for reliable floor installation near me? JRC Floor Installers is your go-to team for expert craftsmanship and high-quality flooring solutions. We specialize in installing laminate floors, luxury vinyl plank (LVP), ceramic flooring, and more?all with attention to detail and service you can count on.",
-    image: "/assets/images/painting-electrical-scaffolding.jpg",
+    image: "/assets/images/painting-electrical-scaffolding.webp",
     path: "/jrc-painting",
     highlights: [
       "Manufacturer Quality Equipment",
@@ -233,6 +245,7 @@ export default function Home() {
                 borderRadius="0px"
                 autoAnimate={true}
                 animationDuration={6}
+                priority
                 className="home-hero-slider"
               />
             </div>
@@ -258,8 +271,8 @@ export default function Home() {
             <div className="home-sec2-features-grid">
               <div className="home-sec2-feature-card">
                 <div className="home-sec2-icon-wrapper">
-                  <img
-                    src="/assets/images/sec2-icon-remodel.png"
+                  <img loading="lazy" decoding="async"
+                    src="/assets/images/sec2-icon-remodel.webp"
                     alt="Remodel Refresh Reimagine"
                     className="home-sec2-icon-img"
                   />
@@ -272,8 +285,8 @@ export default function Home() {
 
               <div className="home-sec2-feature-card">
                 <div className="home-sec2-icon-wrapper">
-                  <img
-                    src="/assets/images/sec2-icon-bathroom.png"
+                  <img loading="lazy" decoding="async"
+                    src="/assets/images/sec2-icon-bathroom.webp"
                     alt="Smart Bathroom Upgrades"
                     className="home-sec2-icon-img"
                   />
@@ -286,8 +299,8 @@ export default function Home() {
 
               <div className="home-sec2-feature-card">
                 <div className="home-sec2-icon-wrapper">
-                  <img
-                    src="/assets/images/sec2-icon-home.png"
+                  <img loading="lazy" decoding="async"
+                    src="/assets/images/sec2-icon-home.webp"
                     alt="Full Home Transformations"
                     className="home-sec2-icon-img"
                   />
@@ -316,36 +329,13 @@ export default function Home() {
                 }}
                 className="home-sec2-video-swiper"
               >
-                <SwiperSlide>
-                  <div className="home-sec2-iframe-wrapper">
-                    <iframe src="https://www.youtube.com/embed/qYmNisQRqJY" title="kitchen Remodeling | JRC Colorado | Testimonial" frameBorder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerPolicy="strict-origin-when-cross-origin" allowFullScreen></iframe>
-                  </div>
-                </SwiperSlide>
-                <SwiperSlide>
-                  <div className="home-sec2-iframe-wrapper">
-                    <iframe src="https://www.youtube.com/embed/N2gZoxeZ-Do" title="Bathroom Remodeling Services | Colorado" frameBorder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerPolicy="strict-origin-when-cross-origin" allowFullScreen></iframe>
-                  </div>
-                </SwiperSlide>
-                <SwiperSlide>
-                  <div className="home-sec2-iframe-wrapper">
-                    <iframe src="https://www.youtube.com/embed/QaoNyK-t6jE" title="BATH REMODLING" frameBorder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerPolicy="strict-origin-when-cross-origin" allowFullScreen></iframe>
-                  </div>
-                </SwiperSlide>
-                <SwiperSlide>
-                  <div className="home-sec2-iframe-wrapper">
-                    <iframe src="https://www.youtube.com/embed/AzZqkkGm_OU" title="Transform Your Bathroom Starting at " frameBorder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerPolicy="strict-origin-when-cross-origin" allowFullScreen></iframe>
-                  </div>
-                </SwiperSlide>
-                <SwiperSlide>
-                  <div className="home-sec2-iframe-wrapper">
-                    <iframe src="https://www.youtube.com/embed/G425lEXqgPs" title="Bathroom Remodeling Starting at " frameBorder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerPolicy="strict-origin-when-cross-origin" allowFullScreen></iframe>
-                  </div>
-                </SwiperSlide>
-                <SwiperSlide>
-                  <div className="home-sec2-iframe-wrapper">
-                    <iframe src="https://www.youtube.com/embed/VtiwBycFHIo" title="Jrc hook" frameBorder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerPolicy="strict-origin-when-cross-origin" allowFullScreen></iframe>
-                  </div>
-                </SwiperSlide>
+                {homeYouTubeShorts.map((clip) => (
+                  <SwiperSlide key={clip.id}>
+                    <div className="home-sec2-iframe-wrapper">
+                      <YouTubeLite id={clip.id} title={clip.title} />
+                    </div>
+                  </SwiperSlide>
+                ))}
               </Swiper>
             </div>
           </div>
@@ -379,8 +369,8 @@ export default function Home() {
             {/* Col 2: Center Image Card */}
             <div className="home-sec3-col2">
               <div className="home-sec3-img-card">
-                <img
-                  src="/assets/images/sec3-navy-kitchen.jpg"
+                <img loading="lazy" decoding="async"
+                  src="/assets/images/sec3-navy-kitchen.webp"
                   alt="Welcome To JRC Home Remodeling"
                   className="home-sec3-img"
                   data-parallax
@@ -491,7 +481,7 @@ export default function Home() {
               {/* Right Column: Active Service Display Card */}
               <div className="home-sec5-card">
                 <div className="home-card-left">
-                  <img
+                  <img loading="lazy" decoding="async"
                     src={currentTabContent.image}
                     alt={currentTabContent.title}
                     className="home-card-img"
@@ -561,7 +551,7 @@ export default function Home() {
               <div className="home-sec6-right">
                 <div className="home-why-img-card">
                   <img
-                    src="/assets/images/sec6-why-choose.jpg"
+                    src="/assets/images/sec6-why-choose.webp"
                     alt="JRC Home Remodeling craftsman finishing a kitchen remodel opening onto an outdoor dining area"
                     className="home-why-img"
                     data-parallax
@@ -587,8 +577,8 @@ export default function Home() {
 
             <div className="home-sec7-grid">
               <div className="home-portfolio-card">
-                <img
-                  src="/assets/images/photo-1756079664354-34944e001f6d.jpeg"
+                <img loading="lazy" decoding="async"
+                  src="/assets/images/photo-1756079664354-34944e001f6d.webp"
                   alt="Master Bedroom Remodel"
                   className="home-portfolio-img"
                   data-parallax
@@ -600,8 +590,8 @@ export default function Home() {
               </div>
 
               <div className="home-portfolio-card">
-                <img
-                  src="/assets/images/photo-1765745518752-68a289300789.jpeg"
+                <img loading="lazy" decoding="async"
+                  src="/assets/images/photo-1765745518752-68a289300789.webp"
                   alt="Modern Kitchen Island Remodel"
                   className="home-portfolio-img"
                   data-parallax
@@ -613,8 +603,8 @@ export default function Home() {
               </div>
 
               <div className="home-portfolio-card">
-                <img
-                  src="/assets/images/photo-1769253523308-f7bff35c60b1.jpeg"
+                <img loading="lazy" decoding="async"
+                  src="/assets/images/photo-1769253523308-f7bff35c60b1.webp"
                   alt="Bathroom Vanity Remodel"
                   className="home-portfolio-img"
                   data-parallax
@@ -653,7 +643,8 @@ export default function Home() {
                       ref={(el) => { videoRefs.current[clip.id] = el; }}
                       className="home-sec8-video-el"
                       src={clip.src}
-                      preload="metadata"
+                      poster={clip.poster}
+                      preload="none"
                       playsInline
                       controls={isPlaying}
                       onPlay={() => handleVideoPlay(clip.id)}
@@ -735,7 +726,7 @@ export default function Home() {
                   overflow: 'hidden',
                   minHeight: '380px',
                   height: '380px',
-                  backgroundImage: "url('/assets/images/about/about-city-bg.jpg')",
+                  backgroundImage: "url('/assets/images/about/about-city-bg.webp')",
                   backgroundPosition: 'center center',
                   backgroundSize: 'cover',
                   boxShadow: '0 12px 30px rgba(0,0,0,0.25)',
@@ -764,8 +755,8 @@ export default function Home() {
                   }}
                 >
                   <div style={{ display: 'flex' }}>
-                    <img
-                      src="/assets/images/about/user9.jpg"
+                    <img loading="lazy" decoding="async"
+                      src="/assets/images/about/user9.webp"
                       alt="Customer"
                       style={{
                         width: '44px',
@@ -775,8 +766,8 @@ export default function Home() {
                         objectFit: 'cover'
                       }}
                     />
-                    <img
-                      src="/assets/images/about/user8.jpg"
+                    <img loading="lazy" decoding="async"
+                      src="/assets/images/about/user8.webp"
                       alt="Customer"
                       style={{
                         width: '44px',
@@ -787,8 +778,8 @@ export default function Home() {
                         marginLeft: '-12px'
                       }}
                     />
-                    <img
-                      src="/assets/images/about/user7.jpg"
+                    <img loading="lazy" decoding="async"
+                      src="/assets/images/about/user7.webp"
                       alt="Customer"
                       style={{
                         width: '44px',

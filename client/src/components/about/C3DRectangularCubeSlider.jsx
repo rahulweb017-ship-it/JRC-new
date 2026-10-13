@@ -5,28 +5,28 @@ const reviewsData = [
   {
     id: 1,
     name: 'Toni Starner',
-    avatar: '/assets/images/about/user9.jpg',
+    avatar: '/assets/images/about/user9.webp',
     rating: 5,
     quote: 'JRC Home Remodeling completely transformed our home with unbelievable craftsmanship and attention to detail. Always on time, professional, easy to reach, and delivered flawless painting and remodeling results!'
   },
   {
     id: 2,
     name: 'Charissa Walton',
-    avatar: '/assets/images/about/user8.jpg',
+    avatar: '/assets/images/about/user8.webp',
     rating: 5,
     quote: 'I have used JRC twice now for exterior painting and kitchen remodeling. They offered transparent pricing, communicated every step of the way, and both projects turned out beautifully. Highly recommended!'
   },
   {
     id: 3,
     name: 'Bliss Bernal',
-    avatar: '/assets/images/about/user7.jpg',
+    avatar: '/assets/images/about/user7.webp',
     rating: 5,
     quote: 'JRC did an awesome job with our interior painting and flooring! Responsive, pleasant, professional, and delivered top-tier quality. We are so happy with the results and look forward to working with Monica and her team again.'
   },
   {
     id: 4,
     name: 'Marcus Vance',
-    avatar: '/assets/images/about/toni-starner.jpg',
+    avatar: '/assets/images/about/toni-starner.webp',
     rating: 5,
     quote: 'Exceptional painting and renovation team in Denver! Their attention to preparation, clean work lines, and high-durability finish exceeded all our expectations. Zero stress from start to finish.'
   }
@@ -141,13 +141,13 @@ export default function C3DRectangularCubeSlider() {
                 </div>
 
                 <div className="cube-author-row">
-                  <img 
+                  <img loading="lazy" decoding="async" 
                     src={review.avatar} 
                     alt={review.name} 
                     className="cube-avatar"
                     onError={(e) => {
                       e.target.onerror = null;
-                      e.target.src = '/assets/images/about/user9.jpg';
+                      e.target.src = '/assets/images/about/user9.webp';
                     }}
                   />
                   <span className="cube-author-name">{review.name}</span>

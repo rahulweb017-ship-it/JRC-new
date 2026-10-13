@@ -64,7 +64,9 @@ function App() {
       <Header />
 
       <main id="content">
-        <Suspense fallback={<div style={{ minHeight: '60vh' }} />}>
+        {/* Taller than the viewport so the footer stays off screen until the page
+            chunk renders; otherwise it visibly jumps down (CLS). */}
+        <Suspense fallback={<div style={{ minHeight: '110vh' }} />}>
         <Routes>
           {/* Primary Page & Root */}
           <Route path="/" element={<Home />} />

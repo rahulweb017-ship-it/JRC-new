@@ -1,4 +1,4 @@
-﻿import { useState } from 'react';
+import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { COMPANY, FOOTER_QUICK_LINKS } from '../../content/siteData';
 import { subscribeNewsletter } from '../../services/api';
@@ -49,7 +49,7 @@ export default function Footer() {
             <div className="footer-col footer-col-brand">
               <Link to="/" aria-label="JRC Home Remodeling" className="footer-logo-link">
                 <img
-                  src="/assets/logo/logo-white.png"
+                  src="/assets/logo/logo-white.webp"
                   alt="JRC Home Remodeling"
                   width="440"
                   height="104"

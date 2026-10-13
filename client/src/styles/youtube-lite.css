@@ -1,0 +1,95 @@
+.yt-lite,
+.yt-lite-frame {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  border: 0;
+}
+
+.yt-lite {
+  display: block;
+  padding: 0;
+  margin: 0;
+  background: #000;
+  cursor: pointer;
+  overflow: hidden;
+  text-align: left;
+  font-family: Roboto, Arial, sans-serif;
+}
+
+.yt-lite-thumb {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  transition: transform 0.4s ease;
+}
+
+.yt-lite:hover .yt-lite-thumb {
+  transform: scale(1.03);
+}
+
+/* Channel avatar + title bar, as in YouTube's embedded player */
+.yt-lite-header {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 12px 36px;
+  background: linear-gradient(to bottom, rgba(0, 0, 0, 0.65) 0%, rgba(0, 0, 0, 0.35) 55%, transparent 100%);
+  pointer-events: none;
+}
+
+.yt-lite-avatar {
+  flex: 0 0 auto;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: #fff;
+  object-fit: cover;
+}
+
+.yt-lite-meta {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.yt-lite-title {
+  color: #fff;
+  font-size: 16px;
+  font-weight: 500;
+  line-height: 1.3;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  text-shadow: 0 0 2px rgba(0, 0, 0, 0.5);
+}
+
+.yt-lite-channel {
+  color: rgba(255, 255, 255, 0.85);
+  font-size: 12px;
+  line-height: 1.4;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.yt-lite-play {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  line-height: 0;
+  filter: drop-shadow(0 2px 6px rgba(0, 0, 0, 0.35));
+  transition: transform 0.2s ease;
+}
+
+.yt-lite:hover .yt-lite-play,
+.yt-lite:focus-visible .yt-lite-play {
+  transform: translate(-50%, -50%) scale(1.08);
+}
