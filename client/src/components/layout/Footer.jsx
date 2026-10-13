@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { COMPANY, FOOTER_QUICK_LINKS } from '../../content/siteData';
 import { subscribeNewsletter } from '../../services/api';
@@ -20,6 +20,27 @@ export default function Footer() {
   const [subscribing, setSubscribing] = useState(false);
   const [subscribed, setSubscribed] = useState(false);
   const [subscribeError, setSubscribeError] = useState('');
+  const mapRef = useRef(null);
+  const [showMap, setShowMap] = useState(false);
+
+  // The Google Maps embed pulls ~365 KB of script. Native loading="lazy" still
+  // fetches it during page load on most pages, so only mount it once the
+  // footer is about to scroll into view.
+  useEffect(() => {
+    const el = mapRef.current;
+    if (!el || showMap) return undefined;
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setShowMap(true);
+          observer.disconnect();
+        }
+      },
+      { rootMargin: '300px 0px' }
+    );
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, [showMap]);
 
   const handleSubscribe = async (e) => {
     e.preventDefault();
@@ -56,17 +77,21 @@ export default function Footer() {
                   className="footer-logo-img"
                 />
               </Link>
-              <div className="footer-map-wrapper">
-                <iframe
-                  title="JRC Remodeling Denver Office Location Map"
-                  src="https://maps.google.com/maps?q=JRC%20Remodeling%205138%20w%2046th%20Ave&t=&z=13&ie=UTF8&iwloc=&output=embed"
-                  width="100%"
-                  height="220"
-                  style={{ border: 0, borderRadius: '4px', display: 'block' }}
-                  allowFullScreen=""
-                  loading="lazy"
-                  referrerPolicy="no-referrer-when-downgrade"
-                />
+              <div className="footer-map-wrapper" ref={mapRef}>
+                {showMap ? (
+                  <iframe
+                    title="JRC Remodeling Denver Office Location Map"
+                    src="https://maps.google.com/maps?q=JRC%20Remodeling%205138%20w%2046th%20Ave&t=&z=13&ie=UTF8&iwloc=&output=embed"
+                    width="100%"
+                    height="220"
+                    style={{ border: 0, borderRadius: '4px', display: 'block' }}
+                    allowFullScreen=""
+                    loading="lazy"
+                    referrerPolicy="no-referrer-when-downgrade"
+                  />
+                ) : (
+                  <div className="footer-map-placeholder" aria-hidden="true" />
+                )}
               </div>
             </div>
 

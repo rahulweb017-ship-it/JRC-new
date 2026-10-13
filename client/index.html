@@ -16,18 +16,28 @@
       // The home hero images are only referenced from JS/CSS, so the browser
       // would discover them late. Start fetching them with the HTML instead.
       if (location.pathname === '/') {
-        [
-          '/assets/images/hero-cream-pattern.jpg',
-          '/assets/images/hero-bathroom-after.webp',
-          '/assets/images/hero-bathroom-before.webp'
-        ].forEach(function (href) {
+        var addLink = function (attrs) {
           var link = document.createElement('link');
-          link.rel = 'preload';
-          link.as = 'image';
-          link.href = href;
-          link.fetchPriority = 'high';
+          for (var key in attrs) link.setAttribute(key, attrs[key]);
           document.head.appendChild(link);
+        };
+        var heroSizes = '(max-width: 991px) calc(100vw - 40px), 50vw';
+        addLink({ rel: 'preload', as: 'image', href: '/assets/images/hero-cream-pattern.jpg', fetchpriority: 'high' });
+        ['after', 'before'].forEach(function (side) {
+          var base = '/assets/images/hero-bathroom-' + side;
+          addLink({
+            rel: 'preload',
+            as: 'image',
+            href: base + '.webp',
+            imagesrcset: base + '-700.webp 700w, ' + base + '.webp 1000w',
+            imagesizes: heroSizes,
+            fetchpriority: 'high'
+          });
         });
+        // Filled in at build time by the home-chunk-preload Vite plugin.
+        var home = __HOME_PRELOAD__;
+        home.js.forEach(function (href) { addLink({ rel: 'modulepreload', href: href }); });
+        home.css.forEach(function (href) { addLink({ rel: 'preload', as: 'style', href: href }); });
       }
     </script>
   </head>

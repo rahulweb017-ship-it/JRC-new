@@ -13,6 +13,9 @@ export default function BeforeAfterSlider({
   autoAnimate = false,
   animationDuration = 6, // duration in seconds for full loop
   priority = false,
+  beforeSrcSet,
+  afterSrcSet,
+  sizes,
   className = '',
   style = {},
 }) {
@@ -158,6 +161,8 @@ export default function BeforeAfterSlider({
       {/* After Image (Background) */}
       <img
         src={afterImage}
+        srcSet={afterSrcSet}
+        sizes={afterSrcSet ? sizes : undefined}
         alt={afterAlt}
         decoding="async"
         {...imageLoadingProps}
@@ -204,6 +209,8 @@ export default function BeforeAfterSlider({
       >
         <img
           src={beforeImage}
+          srcSet={beforeSrcSet}
+          sizes={beforeSrcSet ? sizes : undefined}
           alt={beforeAlt}
           decoding="async"
           {...imageLoadingProps}

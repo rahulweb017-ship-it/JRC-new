@@ -91,6 +91,11 @@
   margin-top: 5px;
 }
 
+.footer-map-placeholder {
+  height: 220px;
+  background: #e9eef3;
+}
+
 .footer-map-img {
   width: 100%;
   max-width: 440px;
@@ -256,7 +261,8 @@
   .footer-container {
     padding: 0 16px !important;
   }
-  .footer-map-wrapper iframe {
+  .footer-map-wrapper iframe,
+  .footer-map-placeholder {
     height: 190px !important;
   }
   .footer-logo-img {

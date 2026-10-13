@@ -237,6 +237,9 @@ export default function Home() {
               <BeforeAfterSlider
                 beforeImage="/assets/images/hero-bathroom-before.webp"
                 afterImage="/assets/images/hero-bathroom-after.webp"
+                beforeSrcSet="/assets/images/hero-bathroom-before-700.webp 700w, /assets/images/hero-bathroom-before.webp 1000w"
+                afterSrcSet="/assets/images/hero-bathroom-after-700.webp 700w, /assets/images/hero-bathroom-after.webp 1000w"
+                sizes="(max-width: 991px) calc(100vw - 40px), 50vw"
                 beforeAlt="Before Bathroom Renovation"
                 afterAlt="After Bathroom Renovation"
                 beforeLabel="BEFORE"
