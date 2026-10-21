@@ -177,6 +177,31 @@ export default function Home() {
   const pageRef = useRef(null);
   const [playingVideo, setPlayingVideo] = useState(null);
   const videoRefs = useRef({});
+  const shortsSwiperRef = useRef(null);
+  const playingShortRef = useRef(null);
+  const [playingShort, setPlayingShort] = useState(null);
+
+  const handleShortPlay = (id) => {
+    playingShortRef.current = id;
+    setPlayingShort(id);
+    shortsSwiperRef.current?.autoplay?.stop();
+  };
+
+  // Swiper keeps the first handler it was given, so read the playing id from
+  // a ref rather than from state captured in this closure.
+  const handleShortsSlideChange = (swiper) => {
+    const playingId = playingShortRef.current;
+    if (!playingId) return;
+    const total = homeYouTubeShorts.length;
+    const index = homeYouTubeShorts.findIndex((clip) => clip.id === playingId);
+    const perView = Math.max(1, Math.floor(Number(swiper.params.slidesPerView) || 1));
+    const offset = (index - swiper.realIndex + total) % total;
+    if (offset >= perView) {
+      playingShortRef.current = null;
+      setPlayingShort(null);
+      swiper.autoplay?.start();
+    }
+  };
 
   // Only one clip runs at a time — starting one stops the other
   const handleVideoPlay = (id, startPlayback = false) => {
@@ -331,11 +356,20 @@ export default function Home() {
                   1024: { slidesPerView: 4 }
                 }}
                 className="home-sec2-video-swiper"
+                onSwiper={(swiper) => {
+                  shortsSwiperRef.current = swiper;
+                }}
+                onSlideChange={handleShortsSlideChange}
               >
                 {homeYouTubeShorts.map((clip) => (
                   <SwiperSlide key={clip.id}>
                     <div className="home-sec2-iframe-wrapper">
-                      <YouTubeLite id={clip.id} title={clip.title} />
+                      <YouTubeLite
+                        id={clip.id}
+                        title={clip.title}
+                        active={playingShort === clip.id}
+                        onPlay={() => handleShortPlay(clip.id)}
+                      />
                     </div>
                   </SwiperSlide>
                 ))}

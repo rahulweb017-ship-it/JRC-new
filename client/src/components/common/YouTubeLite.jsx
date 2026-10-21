@@ -9,11 +9,15 @@ const CHANNEL_AVATAR = '/assets/logo/jrc-avatar.webp';
  * button) but only mounts the real player iframe after the visitor clicks.
  * Each embedded player pulls ~500 KB of script plus third-party cookies, so
  * deferring it keeps the initial page load light.
+ *
+ * Pass `active` to control playback from the parent (e.g. a carousel that
+ * closes the player when it scrolls away); otherwise it manages itself.
  */
-export default function YouTubeLite({ id, title, channel = CHANNEL_NAME }) {
-  const [active, setActive] = useState(false);
+export default function YouTubeLite({ id, title, channel = CHANNEL_NAME, active, onPlay }) {
+  const [localActive, setLocalActive] = useState(false);
+  const isActive = active ?? localActive;
 
-  if (active) {
+  if (isActive) {
     return (
       <iframe
         className="yt-lite-frame"
@@ -31,7 +35,10 @@ export default function YouTubeLite({ id, title, channel = CHANNEL_NAME }) {
     <button
       type="button"
       className="yt-lite"
-      onClick={() => setActive(true)}
+      onClick={() => {
+        setLocalActive(true);
+        onPlay?.();
+      }}
       aria-label={`Play video: ${title}`}
     >
       {/* oardefault is the vertical Shorts thumbnail; not every video has one */}
