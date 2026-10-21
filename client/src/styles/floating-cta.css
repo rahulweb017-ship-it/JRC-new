@@ -1,0 +1,208 @@
+.jrc-fcta {
+  position: fixed;
+  left: 20px;
+  bottom: calc(24px + env(safe-area-inset-bottom, 0px));
+  z-index: 9990;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 12px 16px 12px 12px;
+  border-radius: 18px;
+  background: linear-gradient(135deg, #0A72B8 0%, #01619E 55%, #0B4A7C 100%);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  box-shadow:
+    0 14px 32px rgba(1, 50, 90, 0.35),
+    0 2px 6px rgba(0, 0, 0, 0.15),
+    inset 0 1px 0 rgba(255, 255, 255, 0.18);
+  color: #FFFFFF;
+  text-decoration: none;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(24px) scale(0.96);
+  transition:
+    opacity 0.35s ease,
+    transform 0.45s cubic-bezier(0.22, 1, 0.36, 1),
+    visibility 0s linear 0.45s,
+    box-shadow 0.25s ease;
+}
+
+.jrc-fcta.is-visible {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0) scale(1);
+  transition:
+    opacity 0.35s ease,
+    transform 0.45s cubic-bezier(0.22, 1, 0.36, 1),
+    visibility 0s,
+    box-shadow 0.25s ease;
+}
+
+.jrc-fcta.is-visible:hover {
+  transform: translateY(-3px);
+  box-shadow:
+    0 18px 38px rgba(1, 50, 90, 0.42),
+    0 3px 8px rgba(0, 0, 0, 0.18),
+    inset 0 1px 0 rgba(255, 255, 255, 0.22);
+}
+
+.jrc-fcta:focus-visible {
+  outline: 3px solid #F45404;
+  outline-offset: 3px;
+}
+
+.jrc-fcta-icon {
+  position: relative;
+  flex-shrink: 0;
+  width: 46px;
+  height: 46px;
+  border-radius: 50%;
+  background: #FFFFFF;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.18);
+}
+
+/* Soft ring that pulses out from the phone icon */
+.jrc-fcta-icon::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  border: 2px solid rgba(255, 255, 255, 0.85);
+  animation: jrc-fcta-pulse 2.4s ease-out infinite;
+}
+
+.jrc-fcta-icon svg {
+  width: 20px;
+  height: 20px;
+  fill: #F45404;
+  animation: jrc-fcta-ring 2.4s ease-in-out infinite;
+  transform-origin: 50% 50%;
+}
+
+.jrc-fcta-text {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  min-width: 0;
+}
+
+.jrc-fcta-title {
+  font-family: "Montserrat", sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 1.2;
+  color: rgba(255, 255, 255, 0.95);
+}
+
+.jrc-fcta-phone {
+  font-family: "Poppins", sans-serif;
+  font-size: 19px;
+  font-weight: 700;
+  letter-spacing: 0.4px;
+  line-height: 1.15;
+  color: #FFFFFF;
+}
+
+.jrc-fcta-arrow {
+  flex-shrink: 0;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.14);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.25s ease, transform 0.25s ease;
+}
+
+.jrc-fcta-arrow svg {
+  width: 16px;
+  height: 16px;
+  fill: none;
+  stroke: #FFFFFF;
+  stroke-width: 2.5;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.jrc-fcta:hover .jrc-fcta-arrow {
+  background: #F45404;
+  transform: translateX(2px);
+}
+
+@keyframes jrc-fcta-pulse {
+  0% {
+    transform: scale(1);
+    opacity: 0.8;
+  }
+  70%,
+  100% {
+    transform: scale(1.55);
+    opacity: 0;
+  }
+}
+
+@keyframes jrc-fcta-ring {
+  0%,
+  60%,
+  100% {
+    transform: rotate(0deg);
+  }
+  65% {
+    transform: rotate(-14deg);
+  }
+  70% {
+    transform: rotate(12deg);
+  }
+  75% {
+    transform: rotate(-10deg);
+  }
+  80% {
+    transform: rotate(8deg);
+  }
+  85% {
+    transform: rotate(0deg);
+  }
+}
+
+@media (max-width: 576px) {
+  .jrc-fcta {
+    left: 12px;
+    bottom: calc(14px + env(safe-area-inset-bottom, 0px));
+    gap: 11px;
+    padding: 9px 12px 9px 9px;
+    border-radius: 16px;
+  }
+  .jrc-fcta-icon {
+    width: 40px;
+    height: 40px;
+  }
+  .jrc-fcta-icon svg {
+    width: 18px;
+    height: 18px;
+  }
+  .jrc-fcta-title {
+    font-size: 12.5px;
+  }
+  .jrc-fcta-phone {
+    font-size: 17px;
+  }
+  .jrc-fcta-arrow {
+    width: 24px;
+    height: 24px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .jrc-fcta,
+  .jrc-fcta.is-visible {
+    transition: opacity 0.2s ease, visibility 0s;
+    transform: none;
+  }
+  .jrc-fcta-icon::after,
+  .jrc-fcta-icon svg {
+    animation: none;
+  }
+}

@@ -6,6 +6,7 @@ import SmoothScroll from './hooks/SmoothScroll';
 // Layout
 import Header from './components/layout/Header';
 import Footer from './components/layout/Footer';
+import FloatingCallBadge from './components/layout/FloatingCallBadge';
 
 // Core & Service Pages
 const Home = lazy(() => import('./pages/Home'));
@@ -220,6 +221,7 @@ function App() {
       </main>
 
       <Footer />
+      <FloatingCallBadge />
     </>
   );
 }
